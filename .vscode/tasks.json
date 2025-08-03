@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Start Backend",
+			"type": "shell",
+			"command": "/Users/user/Desktop/python/trinity_game/online_game2/.venv/bin/python -m uvicorn backend.app.main:app --reload",
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}
