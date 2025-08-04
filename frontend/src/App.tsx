@@ -8,6 +8,8 @@ interface Player {
   color: string;
 }
 
+const my_ip = "192.168.1.241";
+
 export default function App() {
   const [playerName, setPlayerName] = useState('');
   const [playerColor, setPlayerColor] = useState('#ff0000');
@@ -19,7 +21,7 @@ export default function App() {
 
   useEffect(() => {
     if (!joined) return;
-    ws.current = new WebSocket(`ws://localhost:8000/ws/${clientId}`);
+    ws.current = new WebSocket(`ws://${my_ip}:8000/ws/${clientId}`);
     ws.current.onopen = () => {
       ws.current?.send(JSON.stringify({ type: 'join', name: playerName, color: playerColor }));
     };

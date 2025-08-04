@@ -8,13 +8,15 @@ interface Player {
   y: number;
 }
 
+const my_ip = "192.168.1.241";
+
 export default function Game({ clientId, playerName, playerColor }: { clientId: string, playerName: string, playerColor: string }) {
   const [players, setPlayers] = useState<Player[]>([]);
   const ws = useRef<WebSocket | null>(null);
   const keys = useRef({ left: false, right: false, jump: false });
 
   useEffect(() => {
-    ws.current = new WebSocket(`ws://localhost:8000/ws/${clientId}`);
+    ws.current = new WebSocket(`ws://${my_ip}:8000/ws/${clientId}`);
     ws.current.onopen = () => {
       ws.current?.send(JSON.stringify({ type: 'join', name: playerName, color: playerColor }));
     };
