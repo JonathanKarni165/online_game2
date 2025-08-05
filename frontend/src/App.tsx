@@ -21,7 +21,8 @@ export default function App() {
 
   useEffect(() => {
     if (!joined) return;
-    ws.current = new WebSocket(`ws://${my_ip}:8000/ws/${clientId}`);
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    ws.current = new WebSocket(`${wsProtocol}://${my_ip}:8000/ws/${clientId}`);
     ws.current.onopen = () => {
       ws.current?.send(JSON.stringify({ type: 'join', name: playerName, color: playerColor }));
     };

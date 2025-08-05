@@ -130,17 +130,27 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
                 game_state.start(list(lobby_state.players.values()))
                 await manager.broadcast(json.dumps({"type": "start"}))
             elif message["type"] == "move":
-                # {type: 'move', left: bool, right: bool, jump: bool}
+                # Support both compressed (mask) and legacy (left/right/jump) movement
                 p = game_state.players.get(client_id)
                 if p:
                     speed = 5
-                    if message.get("left"):
+                    left = right = jump = False
+                    if "mask" in message:
+                        mask = message["mask"]
+                        left = bool(mask & 1)
+                        right = bool(mask & 2)
+                        jump = bool(mask & 4)
+                    else:
+                        left = message.get("left", False)
+                        right = message.get("right", False)
+                        jump = message.get("jump", False)
+                    if left:
                         p.vx = -speed
-                    elif message.get("right"):
+                    elif right:
                         p.vx = speed
                     else:
                         p.vx = 0
-                    if message.get("jump") and p.y >= 500:
+                    if jump and p.y >= 500:
                         p.vy = -10
     except WebSocketDisconnect:
         manager.disconnect(websocket)
